@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veo 3 Consistent Character Prompt Generator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f7fa;
+            --text-color: #333;
+            --border-color: #dce1e6;
+            --background-color: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --success-color: #5cb85c;
+            --success-hover: #4cae4c;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--background-color);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .generate-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 20px;
+        }
+
+        .generate-button:hover {
+            background-color: var(--success-hover);
+            transform: translateY(-2px);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .result-column h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        #result-indonesia, #result-english {
+            height: 400px;
+            background-color: #fdfdfd;
+        }
+        
+        #result-english {
+            background-color: #f0f0f0;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Veo 3 Consistent Character Prompt Generator</h1>
+        <p style="text-align: center; max-width: 800px; margin: 0 auto 30px auto;">Isi kolom-kolom di bawah ini dengan detail sejelas mungkin untuk menciptakan prompt karakter yang konsisten dan kaya. Setelah selesai, klik tombol "Generate Prompt" di bagian bawah.</p>
+
+        <form id="prompt-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="judulScene">1. Judul Scene</label>
+                    <input type="text" id="judulScene" value="Terminal bus malam">
+                </div>
+
+                <div class="form-group">
+                    <label for="deskripsiKarakter">2. Deskripsi Karakter Inti</label>
+                    <textarea id="deskripsiKarakter">Seorang vlogger pria muda asal Maluku berusia 27 tahun.
+Perawakan/Bentuk Tubuh: tubuh kekar, tinggi 164cm, bentuk badan proporsional.
+Warna kulit: sawo matang cerah.
+Rambut: lurus, hitam kecokelatan, belah samping.
+Wajah: wajah oval, alis tebal alami, mata hitam besar, senyum ramah, pipi merona, bibir natural.
+Pakaian: mengenakan jaket hoddie warna loreng dan celana panjang hitam robek di lutut, membawa ransel kecil.</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="detailSuara">3. Detail Suara Karakter</label>
+                    <textarea id="detailSuara">Dia berbicara dengan suara pria muda yang hangat dan penuh semangat.
+Nada: Young Male.
+Timbre: bersahabat dan enerjik.
+Aksen/Logat: logat Indonesia dengan sentuhan khas Maluku halus, berbicara murni dalam Bahasa Indonesia.
+Cara Berbicara: tempo sedang-cepat, gaya bicara lincah dan ekspresif.
+PENTING: Seluruh dialog harus dalam Bahasa Indonesia dengan pengucapan natural dan jelas. Pastikan suara karakter ini konsisten di seluruh video.</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="aksiKarakter">4. Aksi Karakter</label>
+                    <input type="text" id="aksiKarakter" value="berjalan di sekitar terminal bus malam sambil melihat-lihat aktivitas penumpang dan pedagang.">
+                </div>
+
+                <div class="form-group">
+                    <label for="ekspresiKarakter">5. Ekspresi Karakter</label>
+                    <input type="text" id="ekspresiKarakter" value="Karakter menunjukkan ekspresi kagum dan antusias, sering tersenyum sambil melirik kamera.">
+                </div>
+
+                <div class="form-group">
+                    <label for="latar">6. Latar Tempat & Waktu</label>
+                    <textarea id="latar">Latar tempat: di terminal bus antar kota malam hari, terdapat pedagang kaki lima di pinggir jalur keberangkatan, beberapa bus berjajar dengan lampu menyala.
+Waktu: malam hari, hujan rintik-rintik.</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="detailVisual">7. Detail Visual Tambahan</label>
+                    <select id="gerakanKamera">
+                        <option value="Tracking Shot (Tembakan Mengikuti)">Tracking Shot (Tembakan Mengikuti)</option>
+                        <option value="Static Shot (Tembakan Statis)">Static Shot (Tembakan Statis)</option>
+                        <option value="Pan (Geser Horizontal)">Pan (Geser Horizontal)</option>
+                        <option value="Tilt (Geser Vertikal)">Tilt (Geser Vertikal)</option>
+                        <option value="Dolly In/Out (Maju/Mundur)">Dolly In/Out (Maju/Mundur)</option>
+                        <option value="Zoom In/Out (Perbesar/Perkecil)">Zoom In/Out (Perbesar/Perkecil)</option>
+                        <option value="Handheld (Genggam)">Handheld (Genggam)</option>
+                        <option value="Crane Shot (Tembakan Derek)">Crane Shot (Tembakan Derek)</option>
+                        <option value="Arc Shot (Tembakan Melingkar)">Arc Shot (Tembakan Melingkar)</option>
+                        <option value="3D Rotation (Rotasi 3D)">3D Rotation (Rotasi 3D)</option>
+                        <option value="Roll (Bergulir)">Roll (Bergulir)</option>
+                        <option value="Truck (Geser ke Samping)">Truck (Geser ke Samping)</option>
+                        <option value="Pedestal (Naik/Turun)">Pedestal (Naik/Turun)</option>
+                        <option value="Whip Pan (Geser Cepat)">Whip Pan (Geser Cepat)</option>
+                    </select>
+                    <input type="text" id="pencahayaan" value="Pencahayaan: natural dari lampu jalan dan lampu bus, pantulan cahaya pada aspal basah." style="margin-top:10px;">
+                    <input type="text" id="gayaVideo" value="Gaya Video/Art Style: cinematic realistis." style="margin-top:10px;">
+                    <select id="kualitasVisual" style="margin-top:10px;">
+                        <option value="Resolusi 4K">Resolusi 4K</option>
+                        <option value="Resolusi 1080p">Resolusi 1080p</option>
+                        <option value="Resolusi 8K">Resolusi 8K</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="suasana">8. Suasana Keseluruhan</label>
+                    <input type="text" id="suasana" value="Suasana sibuk, ramai, dengan kesan perjalanan malam yang hidup dan dinamis meskipun hujan.">
+                </div>
+
+                <div class="form-group">
+                    <label for="suaraLingkungan">9. Suara Lingkungan / Ambiens</label>
+                    <textarea id="suaraLingkungan">SOUND: suara mesin bus menyala, pengumuman dari pengeras suara, derai hujan ringan, dan percakapan samar antar penumpang dan pedagang.</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="dialogKarakter">10. Dialog Karakter</label>
+                    <textarea id="dialogKarakter">DIALOG dalam Bahasa Indonesia: Karakter berkata: Tiap kota punya terminal kayak gini, dan aku suka banget suasana malamnya… hangat walau gerimis begini. Rasanya kayak perjalanan baru mau dimulai.</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="negativePrompt">11. Negative Prompt</label>
+                    <textarea id="negativePrompt">Hindari: teks di layar, subtitle, tulisan di video, font, logo, distorsi, artefak, anomali, wajah ganda, anggota badan cacat, tangan tidak normal, orang tambahan, objek mengganggu, kualitas rendah, buram, glitch, suara robotik, suara pecah.</textarea>
+                </div>
+
+            </div>
+
+            <button type="button" class="generate-button" id="generate-btn">Generate Prompt</button>
+        </form>
+
+        <div id="results" style="display: none;">
+            <h2>Hasil Prompt</h2>
+            <div class="results-grid">
+                <div class="result-column">
+                    <h3>Versi Bahasa Indonesia (Dapat Diedit)</h3>
+                    <textarea id="result-indonesia"></textarea>
+                </div>
+                <div class="result-column">
+                    <h3>Versi Final Bahasa Inggris (Read-Only)</h3>
+                    <textarea id="result-english" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('generate-btn').addEventListener('click', function() {
+            // Mengambil semua nilai dari form
+            const judulScene = document.getElementById('judulScene').value;
+            const deskripsiKarakter = document.getElementById('deskripsiKarakter').value;
+            const detailSuara = document.getElementById('detailSuara').value;
+            const aksiKarakter = document.getElementById('aksiKarakter').value;
+            const ekspresiKarakter = document.getElementById('ekspresiKarakter').value;
+            const latar = document.getElementById('latar').value;
+            const gerakanKamera = document.getElementById('gerakanKamera').value;
+            const pencahayaan = document.getElementById('pencahayaan').value;
+            const gayaVideo = document.getElementById('gayaVideo').value;
+            const kualitasVisual = document.getElementById('kualitasVisual').value;
+            const suasana = document.getElementById('suasana').value;
+            const suaraLingkungan = document.getElementById('suaraLingkungan').value;
+            const dialogKarakter = document.getElementById('dialogKarakter').value;
+            const negativePrompt = document.getElementById('negativePrompt').value;
+
+            // ---- Membuat Prompt Bahasa Indonesia ----
+            const promptIndonesia = `**Judul Scene:** ${judulScene}.
+
+**Deskripsi Karakter Utama yang Konsisten:**
+${deskripsiKarakter}
+
+**Detail Suara Karakter yang Konsisten:**
+${detailSuara}
+
+**Aksi dan Ekspresi:**
+Karakter sedang ${aksiKarakter}. Selama beraksi, karakter menunjukkan ${ekspresiKarakter}.
+
+**Setting dan Atmosfer:**
+${latar}. ${pencahayaan}. ${gayaVideo}. ${kualitasVisual}. Suasana keseluruhan terasa ${suasana}.
+
+**Audio:**
+${suaraLingkungan}
+${dialogKarakter}
+
+**Negative Prompt:**
+${negativePrompt}`;
+
+            // ---- Membuat Prompt Bahasa Inggris ----
+            // Ekstrak dialog dari input dialog
+            let dialogOnly = dialogKarakter.split(':').slice(1).join(':').trim();
+            if (dialogOnly.startsWith('Karakter berkata:')) {
+                dialogOnly = dialogOnly.substring('Karakter berkata:'.length).trim();
+            }
+
+            const promptEnglish = `**Scene Title:** ${judulScene}.
+
+**Consistent Main Character Description:**
+A detailed description of a character, ensuring consistency across scenes:
+${deskripsiKarakter}
+
+**Consistent Character Voice Details:**
+${detailSuara}
+
+**Action and Expression:**
+The character is ${aksiKarakter}. While performing the action, the character shows expressions of ${ekspresiKarakter}.
+
+**Setting and Atmosphere:**
+${latar}. ${pencahayaan}. ${gayaVideo}. ${kualitasVisual}. The overall atmosphere feels ${suasana}.
+
+**Camera and Visuals:**
+Camera Movement: ${gerakanKamera}, creating a dynamic and cinematic feel.
+
+**Audio:**
+${suaraLingkungan}
+DIALOGUE in Indonesian: The character says: "${dialogOnly}"
+
+**Negative Prompt:**
+${negativePrompt}`;
+
+            // Menampilkan hasil
+            document.getElementById('result-indonesia').value = promptIndonesia;
+            document.getElementById('result-english').value = promptEnglish;
+            document.getElementById('results').style.display = 'block';
+
+            // Scroll ke hasil
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+
+</body>
+</html> 
